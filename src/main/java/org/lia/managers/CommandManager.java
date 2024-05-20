@@ -1,6 +1,7 @@
 package org.lia.managers;
 
 import org.lia.commands.*;
+import org.lia.multithreading.GetRequest;
 import org.lia.tools.Response;
 
 import java.io.*;
@@ -13,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**CommandManager class. Provides operations with commands*/
 public class CommandManager {
@@ -40,47 +43,11 @@ public class CommandManager {
             dc = DatagramChannel.open();
             dc.bind(addr);
             dc.configureBlocking(false);
+            ExecutorService executor = Executors.newCachedThreadPool();
             while (true) {
                 getInputFromConsole();
-                SocketAddress address = dc.receive(buf);
-                if (address != null) {
-                    buf.flip();
-                    try {
-                        ByteArrayInputStream in = new ByteArrayInputStream(buf.array());
-                        ObjectInputStream is = new ObjectInputStream(in);
-                        Command command = (Command) is.readObject();
-                        command.setCollectionManager(collectionManager);
-                        command.setCommandManager(this);
-                        command.setSqlManager(sqlManager);
-                        Response response;
-                        if (sqlManager.checkUser(command.getLogin(), command.getPassword()) > 0 | command.getClass()==SignUpCommand.class) {
-                            response = command.execute();
-                        } else {
-                            response = new Response();
-                            response.addAnswer("Access denied. Please login");
-                        }
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        ObjectOutputStream oos = new ObjectOutputStream(baos);
-                        oos.writeObject(response);
-                        byte[] secondaryBuffer = baos.toByteArray();
-                        ByteBuffer mainBuffer = ByteBuffer.wrap(secondaryBuffer);
-                        dc.send(mainBuffer, address);
-                    } catch (StreamCorruptedException | UTFDataFormatException e) {
-                        System.out.println("Bad packet");
-                        buf.clear();
-                        Response response = new Response();
-                        response.addAnswer("Protocol error. Please try again");
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        ObjectOutputStream oos = new ObjectOutputStream(baos);
-                        oos.writeObject(response);
-                        byte[] secondaryBuffer = baos.toByteArray();
-                        ByteBuffer mainBuffer = ByteBuffer.wrap(secondaryBuffer);
-                        dc.send(mainBuffer, address);
-                    } catch (EOFException | ClassNotFoundException e) {
-                        System.out.println(e);
-                    }
-                }
-                buf.clear();
+                GetRequest request = new GetRequest(buf, dc, collectionManager, sqlManager, this, executor);
+                executor.submit(request);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,20 +59,7 @@ public class CommandManager {
             if (System.in.available() > 0) {
                 Scanner in = new Scanner(System.in);
                 String command = in.nextLine();
-                if (command.equals("save")) {
-                    //this.fileManager.writeCollection(collectionManager.getProductCollection());
-                } else if (command.equals("exit")) {
-                    System.out.println("Do you want to save your collection? Y/n");
-                    System.out.print("> ");
-                    String answer = in.nextLine().toUpperCase();
-                    while (!answer.equals("Y") & !answer.equals("N")) {
-                        System.out.println("Wrong input, try again. Do you want to save the collection? Y/n");
-                        System.out.print("> ");
-                        answer = in.nextLine().toUpperCase();
-                    }
-                    if (answer.equals("Y")) {
-                        //this.fileManager.writeCollection(collectionManager.getProductCollection());
-                    }
+                if (command.equals("exit")) {
                     System.out.println("goodbye");
                     System.exit(0);
                 } else {

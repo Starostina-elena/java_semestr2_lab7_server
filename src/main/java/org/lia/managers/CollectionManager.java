@@ -8,7 +8,7 @@ import java.util.ArrayDeque;
 /**CollectionManager class. Stores collection*/
 public class CollectionManager {
 
-    private ArrayDeque<Product> productCollection;
+    private volatile ArrayDeque<Product> productCollection;
     private java.time.LocalDate creationDate;
 
     public CollectionManager() {
