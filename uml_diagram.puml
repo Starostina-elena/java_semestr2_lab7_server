@@ -1,0 +1,467 @@
+@startuml
+class org.lia.commands.PrintFieldAscendingManufacturerCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.managers.CollectionManager {
+- ArrayDeque<Product> productCollection
+- java.time.LocalDate creationDate
++ ArrayDeque<Product> getProductCollection()
++ long getNumberOfElements()
++ void setProductCollection(ArrayDeque<Product>)
++ void addToCollection(Product)
++ void removeFromCollection(Product)
++ void changeIdIndex()
++ Product getById(long)
++ String shortInfo()
++ void show()
++ String toString()
+}
+
+
+class org.lia.Main {
++ {static} void main(String[])
+}
+
+class org.lia.models.Product {
+- {static} long serialVersionUID
+- long id
+- String name
+- Coordinates coordinates
+- java.sql.Date creationDate
+- Integer price
+- String partNumber
+- Integer manufactureCost
+- UnitOfMeasure unitOfMeasure
+- Organization manufacturer
+- long userId
++ void setup()
++ void setId(long)
++ long getId()
++ String getName()
++ void setName(String)
++ Coordinates getCoordinates()
++ void setCoordinates(Coordinates)
++ Date getCreationDate()
++ Integer getPrice()
++ void setPrice(Integer)
++ String getPartNumber()
++ void setPartNumber(String)
++ Integer getManufactureCost()
++ void setManufactureCost(Integer)
++ UnitOfMeasure getUnitOfMeasure()
++ void setUnitOfMeasure(UnitOfMeasure)
++ Organization getManufacturer()
++ void setManufacturer(Organization)
++ void setUserId(long)
++ long getUserId()
++ boolean equals(Object)
++ int hashCode()
++ String toString()
++ int compareTo(Product)
+}
+
+
+class org.lia.commands.AddIfMaxCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- Product product
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.models.Organization {
+- {static} long serialVersionUID
+- Long id
+- String name
+- String fullName
+- Integer employeesCount
+- {static} Long currentId
++ Long getId()
++ void setId(Long)
++ String getName()
++ void setName(String)
++ String getFullName()
++ void setFullName(String)
++ Integer getEmployeesCount()
++ void setEmployeesCount(Integer)
++ {static} void updateId(long)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
++ int compareTo(Organization)
+}
+
+
+class org.lia.commands.ShowCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.multithreading.WorkRequest {
+~ GetRequest request
++ void run()
+}
+
+
+class org.lia.commands.GetByIdCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- long id
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.tools.Response {
+- {static} long serialVersionUID
+- Product product
+- ArrayList<String> answer
++ Product getProduct()
++ void setProduct(Product)
++ ArrayList<String> getAnswer()
++ void addAnswer(String)
+}
+
+
+class org.lia.commands.RemoveHeadCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.commands.UpdateCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- Product product
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.commands.MinByIdCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.commands.RemoveByIdCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- long id
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.models.Coordinates {
+- {static} long serialVersionUID
+- long x
+- double y
++ long getX()
++ double getY()
++ void setX(long)
++ void setY(double)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+
+
+class org.lia.multithreading.GetRequest {
+~ ByteBuffer buf
+~ DatagramChannel dc
+~ CollectionManager collectionManager
+~ SqlManager sqlManager
+~ CommandManager commandManager
+~ Command command
+~ Response response
+~ WorkRequest working
+~ SendRequest answer
+~ SocketAddress address
+~ ExecutorService executor
++ void run()
+}
+
+
+interface org.lia.commands.Command {
+~ Response execute()
+~ void setCollectionManager(CollectionManager)
+~ void setSqlManager(SqlManager)
+~ void setCommandManager(CommandManager)
+~ String description()
++ String getLogin()
++ String getPassword()
+}
+
+class org.lia.commands.ClearCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.commands.AddCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- Product product
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.managers.SqlManager {
+~ String username
+~ String password
+~ String url
+~ Connection connection
++ CollectionManager getCollectionFromDatabase()
++ long addElement(Product)
++ long addUser(String,String)
++ long checkUser(String,String)
++ void deleteElementsByUserId(long)
++ int deleteElementById(long,long)
+}
+
+
+class org.lia.multithreading.SendRequest {
+~ GetRequest request
++ void run()
+}
+
+
+class org.lia.commands.InfoCommand {
+- {static} long serialVersionUID
+- String login
+- String password
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.commands.CountByPartNumberCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- String partNumber
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.commands.SignUpCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- String login
+- String passwordString
+- byte[] passwordByte
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+class org.lia.commands.RemoveLowerCommand {
+- {static} long serialVersionUID
+- CollectionManager collectionManager
+- SqlManager sqlManager
+- CommandManager commandManager
+- long id
+- String login
+- String password
++ String description()
++ Response execute()
++ void setCollectionManager(CollectionManager)
++ void setSqlManager(SqlManager)
++ void setCommandManager(CommandManager)
++ String getLogin()
++ String getPassword()
+}
+
+
+enum org.lia.models.UnitOfMeasure {
++  CENTIMETERS
++  SQUARE_METERS
++  MILLILITERS
++  GRAMS
+}
+
+class org.lia.managers.FileManager {
+- String filename
+- XStream xstream
++ String getFilename()
++ boolean checkFileExists()
++ void writeCollection(ArrayDeque<Product>)
++ CollectionManager readCollection()
+}
+
+
+class org.lia.managers.CommandManager {
+- Map<String,Command> commandsManager
+- CollectionManager collectionManager
+- SqlManager sqlManager
+~ DatagramChannel dc
+~ ByteBuffer buf
+~ InetAddress host
+~ int port
+~ SocketAddress addr
++ void listen()
++ void getInputFromConsole()
++ Map<String,Command> getCommandsList()
++ CollectionManager getCollectionManager()
+}
+
+
+
+
+org.lia.commands.Command <|.. org.lia.commands.PrintFieldAscendingManufacturerCommand
+org.lia.models.Comparable <|.. org.lia.models.Product
+java.io.Serializable <|.. org.lia.models.Product
+org.lia.commands.Command <|.. org.lia.commands.AddIfMaxCommand
+org.lia.models.Comparable <|.. org.lia.models.Organization
+java.io.Serializable <|.. org.lia.models.Organization
+org.lia.commands.Command <|.. org.lia.commands.ShowCommand
+org.lia.multithreading.Runnable <|.. org.lia.multithreading.WorkRequest
+org.lia.commands.Command <|.. org.lia.commands.GetByIdCommand
+java.io.Serializable <|.. org.lia.tools.Response
+org.lia.commands.Command <|.. org.lia.commands.RemoveHeadCommand
+org.lia.commands.Command <|.. org.lia.commands.UpdateCommand
+org.lia.commands.Command <|.. org.lia.commands.MinByIdCommand
+org.lia.commands.Command <|.. org.lia.commands.RemoveByIdCommand
+java.io.Serializable <|.. org.lia.models.Coordinates
+org.lia.multithreading.Runnable <|.. org.lia.multithreading.GetRequest
+java.io.Serializable <|-- org.lia.commands.Command
+org.lia.commands.Command <|.. org.lia.commands.ClearCommand
+org.lia.commands.Command <|.. org.lia.commands.AddCommand
+org.lia.multithreading.Runnable <|.. org.lia.multithreading.SendRequest
+org.lia.commands.Command <|.. org.lia.commands.InfoCommand
+org.lia.commands.Command <|.. org.lia.commands.CountByPartNumberCommand
+org.lia.commands.Command <|.. org.lia.commands.SignUpCommand
+org.lia.commands.Command <|.. org.lia.commands.RemoveLowerCommand
+@enduml
