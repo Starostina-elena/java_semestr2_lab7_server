@@ -79,6 +79,10 @@ public class Product implements Comparable<Product>, Serializable {
         return creationDate;
     }
 
+    public void setCreationDate(Date date) {
+        creationDate = date;
+    }
+
     /**Returns price of the element*/
     public Integer getPrice() {
         return price;

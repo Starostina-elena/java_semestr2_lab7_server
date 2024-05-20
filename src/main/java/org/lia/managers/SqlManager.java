@@ -89,6 +89,32 @@ public class SqlManager {
         return result.getInt("id");
     }
 
+    public void updateElement(Product product) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
+                "UPDATE Product " +
+                        "SET name=?, creation_date=?, price=?, part_number=?, manufacture_cost=?, coord_x=?, coord_y=?, org_name=?, org_fullname=?, org_employees_count=?, creator=? " +
+                        "WHERE id=?"
+        ); // TODO: починить unit of measure
+        statement.setString(1, product.getName());
+        statement.setDate(2, product.getCreationDate());
+        statement.setInt(3, product.getPrice());
+        statement.setString(4, product.getPartNumber());
+        statement.setInt(5, product.getManufactureCost());
+        statement.setLong(6, product.getCoordinates().getX());
+        statement.setDouble(7, product.getCoordinates().getY());
+        statement.setString(8, product.getManufacturer().getName());
+        statement.setString(9, product.getManufacturer().getFullName());
+        if (product.getManufacturer().getEmployeesCount() != null) {
+            statement.setInt(10, product.getManufacturer().getEmployeesCount());
+        } else {
+            statement.setNull(10, Types.INTEGER);
+        }
+        statement.setLong(11, product.getUserId());
+        statement.setLong(12, product.getId());
+        // statement.setString(12, product.getUnitOfMeasure().toString().toUpperCase());
+        statement.execute();
+    }
+
     public long addUser(String login, String password) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO Users(username, password)" +

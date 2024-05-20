@@ -10,6 +10,7 @@ import org.lia.models.Product;
 import org.lia.models.UnitOfMeasure;
 import org.lia.tools.Response;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -23,6 +24,7 @@ public class UpdateCommand implements Command {
     private Product product;
     private String login;
     private String password;
+    long productId;
 
     public UpdateCommand(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
@@ -34,7 +36,31 @@ public class UpdateCommand implements Command {
 
     public Response execute() {
         Response response = new Response();
-        response.addAnswer("object was updated successfully");
+        long userId = sqlManager.checkUser(login, password);
+        Product oldProduct = null;
+        for (Product c : collectionManager.getProductCollection()) {
+            if (c.getId() == productId) {
+                oldProduct = c;
+                break;
+            }
+        }
+        if (oldProduct == null | product == null) {
+            response.addAnswer("no such element");
+        } else if (oldProduct.getUserId() == userId) {
+            try {
+                product.setId(productId);
+                product.setUserId(userId);
+                product.setCreationDate(oldProduct.getCreationDate());
+                sqlManager.updateElement(product);
+                collectionManager.removeFromCollection(oldProduct);
+                collectionManager.addToCollection(product);
+                response.addAnswer("object was successfully updated");
+            } catch (SQLException e) {
+                response.addAnswer(e.toString());
+            }
+        } else {
+            response.addAnswer("access denied: you can not modify objects created buy other users");
+        }
         return response;
     }
 
